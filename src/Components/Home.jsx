@@ -5,11 +5,22 @@ import { useNavigate } from "react-router-dom";
 import Card from "./card/Card";
 import CartList from "./card/CartList";
 import Footer from "./Footer";
+import Modal from "./Modal";
 import Navbar from "./Navbar";
 import Search from "./navbar/Search";
+import Loader from "./Loader";
 // import Slider from "react-slick";
 
 function Home() {
+    const [loaded, setLoaded] = useState(false);
+
+    useEffect(() => {
+        let timer = setTimeout(() => setLoaded(true), 3000);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
     const navigate = useNavigate();
 
     const [product, setProduct] = useState([
@@ -79,23 +90,23 @@ function Home() {
         },
     ]);
     const photos = [
-      {
-        name: 'photo 1',
-        url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-      },
-      {
-        name: 'photo 2',
-        url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-      },
-      {
-        name: 'photo 3',
-        url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-      },
-      {
-        name: 'photo 4',
-        url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60"
-      }
-    ]
+        {
+            name: "photo 1",
+            url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+        },
+        {
+            name: "photo 2",
+            url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+        },
+        {
+            name: "photo 3",
+            url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+        },
+        {
+            name: "photo 4",
+            url: "https://images.unsplash.com/photo-1620891549027-942fdc95d3f5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dGVzbGF8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+        },
+    ];
 
     useEffect(() => {
         if (!localStorage.getItem("User")) {
@@ -120,12 +131,29 @@ function Home() {
     //     className: "slides"
     // };
 
+    const [openModal, setOpenModal] = useState(false);
+
+    useEffect(() => {
+        let timer = setTimeout(() => setOpenModal(true), 6000);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, []);
+
     return (
         <>
+            { !loaded ? ( <Loader /> ) : (<div>
             <Navbar count={cart.length} />
+            {/* <button onClick={() => setOpenModal(true)} className="modalButton">
+                New Products
+            </button> */}
+            {() => setOpenModal(true)}
+
+            <Modal open={openModal} onClose={() => setOpenModal(false)} />
             <CartList cart={cart} />
             <Card product={product} addToCart={addToCart} />
             <Footer />
+            </div> )}
         </>
     );
 }
